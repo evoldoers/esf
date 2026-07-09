@@ -1,0 +1,463 @@
+<!--
+  Evolutionary Software Foundation — single-page site.
+  Self-contained: no external CSS/JS/fonts/assets. Safe for GitHub Pages and offline.
+-->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evolutionary Software Foundation</title>
+<meta name="description" content="The Evolutionary Software Foundation is a nonprofit that promotes the understanding and application of evolutionary ideas in molecular biology and computer science, and stewards a family of free and open-source scientific software including JBrowse.">
+<meta name="color-scheme" content="light">
+
+<style>
+  /* ----------  Design tokens  ----------
+     Palette: cool paper + ink with a single quiet accent, "verdigris" —
+     the patina of aged bronze scientific instruments; characterful, not startup-bright.
+     Type voices carry the concept: a scholarly serif for biology's tradition,
+     a monospace for computer science. The foundation lives where they meet.        */
+  :root {
+    --paper:      #F6F7F5;   /* cool off-white, not cream */
+    --paper-2:    #FFFFFF;   /* card surface */
+    --ink:        #191D1B;   /* near-black, faint green cast */
+    --ink-soft:   #4E5A54;   /* secondary text */
+    --ink-faint:  #7C877F;   /* captions, small print */
+    --line:       #E1E4DF;   /* hairlines */
+    --line-2:     #ECEEEA;
+    --accent:     #2E6E5F;   /* verdigris */
+    --accent-dk:  #235749;
+    --accent-wash:#E7EFEB;
+
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Palatino LT STD", "URW Palladio L", "Book Antiqua", Georgia, serif;
+    --sans:  ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono:  ui-monospace, "SF Mono", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, "Liberation Mono", monospace;
+
+    --measure: 66ch;
+    --gutter: clamp(1.25rem, 5vw, 4rem);
+    --maxw: 1120px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: clamp(1rem, 0.96rem + 0.2vw, 1.075rem);
+    line-height: 1.6;
+    letter-spacing: 0.002em;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3 { text-wrap: balance; margin: 0; }
+
+  a { color: var(--accent-dk); text-decoration-color: color-mix(in srgb, var(--accent) 45%, transparent); text-underline-offset: 3px; }
+  a:hover { text-decoration-color: var(--accent); }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .wrap { max-width: var(--maxw); margin-inline: auto; padding-inline: var(--gutter); }
+
+  /* Eyebrow / label voice = the "computer science" register */
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent-dk);
+    margin: 0 0 1.1rem;
+  }
+
+  /* ----------  Skip link  ---------- */
+  .skip {
+    position: absolute; left: -999px; top: 0;
+    background: var(--ink); color: #fff; padding: .6rem 1rem; z-index: 10; border-radius: 0 0 6px 0;
+  }
+  .skip:focus { left: 0; }
+
+  /* ----------  Header  ---------- */
+  .site-head {
+    border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    position: sticky; top: 0; z-index: 5;
+    backdrop-filter: saturate(1.2) blur(6px);
+  }
+  .site-head .wrap {
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    min-height: 68px;
+  }
+  .brand { display: flex; align-items: center; gap: .7rem; text-decoration: none; color: var(--ink); }
+  .brand:hover { text-decoration: none; }
+  .brand .mark { flex: none; }
+  .brand .name {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.06rem;
+    letter-spacing: .01em;
+    line-height: 1.05;
+  }
+  .brand .name b { font-weight: 600; }
+  .brand .sub { display: block; font-family: var(--mono); font-size: .62rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-faint); margin-top: 2px; }
+
+  .nav { display: flex; gap: clamp(1rem, 3vw, 2.1rem); font-size: .9rem; }
+  .nav a { color: var(--ink-soft); text-decoration: none; }
+  .nav a:hover { color: var(--accent-dk); }
+  @media (max-width: 560px) { .nav { display: none; } }
+
+  /* ----------  Hero  ---------- */
+  .hero { padding: clamp(3.5rem, 10vw, 7rem) 0 clamp(2.5rem, 6vw, 4rem); }
+  .mission {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(2rem, 1.2rem + 4vw, 3.9rem);
+    line-height: 1.08;
+    letter-spacing: -0.012em;
+    max-width: 20ch;
+  }
+  .mission .lede { color: var(--ink); }
+  /* The two fields, typeset in the two voices — the page's signature.  */
+  .field-bio { font-style: italic; }
+  .field-cs {
+    font-family: var(--mono);
+    font-style: normal;
+    font-size: 0.78em;
+    letter-spacing: -0.01em;
+    background: var(--accent-wash);
+    color: var(--accent-dk);
+    padding: 0.02em 0.28em;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .amp {
+    display: inline-block;
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-note {
+    margin-top: clamp(1.75rem, 4vw, 2.75rem);
+    max-width: 52ch;
+    color: var(--ink-soft);
+    font-size: 1.05rem;
+  }
+
+  /* ----------  Section frame  ---------- */
+  section { padding-block: clamp(3rem, 7vw, 5.5rem); }
+  .section-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: .4rem;
+    margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-head h2 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.15rem);
+    letter-spacing: -0.008em;
+  }
+  .section-head p { margin: .25rem 0 0; color: var(--ink-soft); max-width: var(--measure); }
+
+  /* ----------  Projects  ---------- */
+  .org-block + .org-block { margin-top: clamp(2.5rem, 5vw, 3.75rem); }
+  .org-bar {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .org-bar h3 {
+    font-family: var(--mono);
+    font-size: .95rem;
+    font-weight: 600;
+    letter-spacing: .01em;
+    color: var(--ink);
+  }
+  .org-bar .org-note { color: var(--ink-faint); font-size: .88rem; max-width: 44ch; }
+  .org-bar .org-link { margin-left: auto; font-family: var(--mono); font-size: .82rem; text-decoration: none; color: var(--accent-dk); }
+  .org-bar .org-link:hover { text-decoration: underline; }
+  @media (max-width: 560px) { .org-bar .org-link { margin-left: 0; } }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .card {
+    display: flex; flex-direction: column; gap: .55rem;
+    background: var(--paper-2);
+    padding: 1.4rem 1.4rem 1.5rem;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    transition: background .18s ease, transform .18s ease;
+  }
+  .card:hover { background: color-mix(in srgb, var(--accent-wash) 55%, var(--paper-2)); }
+  .card:hover .card-name { color: var(--accent-dk); }
+  .card-top { display: flex; align-items: baseline; justify-content: space-between; gap: .5rem; }
+  .card-name {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 1.22rem;
+    letter-spacing: -0.005em;
+    transition: color .18s ease;
+  }
+  .card-arrow { flex: none; color: var(--ink-faint); transition: transform .18s ease, color .18s ease; }
+  .card:hover .card-arrow { color: var(--accent-dk); transform: translate(2px, -2px); }
+  .card-desc { color: var(--ink-soft); font-size: .96rem; line-height: 1.5; }
+  .card-host {
+    margin-top: auto;
+    font-family: var(--mono);
+    font-size: .74rem;
+    letter-spacing: .02em;
+    color: var(--ink-faint);
+    padding-top: .5rem;
+  }
+
+  /* ----------  About / stewardship  ---------- */
+  .about .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(1.5rem, 4vw, 3rem); }
+  @media (min-width: 820px) { .about .wrap { grid-template-columns: 0.9fr 1.1fr; align-items: start; } }
+  .about-lead {
+    font-family: var(--serif);
+    font-size: clamp(1.3rem, 1.05rem + 1vw, 1.7rem);
+    line-height: 1.32;
+    letter-spacing: -0.006em;
+    margin: 0;
+  }
+  .about-body p { color: var(--ink-soft); max-width: var(--measure); margin: 0; }
+  .about-body p + p { margin-top: 1rem; }
+  .facts { list-style: none; margin: 1.75rem 0 0; padding: 0; display: grid; gap: .1rem; }
+  .facts li { display: flex; gap: 1rem; align-items: baseline; padding: .7rem 0; border-top: 1px solid var(--line-2); }
+  .facts .k { font-family: var(--mono); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); flex: none; width: 8.5rem; }
+  .facts .v { color: var(--ink); }
+
+  /* ----------  Footer  ---------- */
+  footer {
+    border-top: 1px solid var(--line);
+    padding-block: clamp(2.25rem, 5vw, 3.5rem);
+    margin-top: clamp(1rem, 3vw, 2rem);
+  }
+  .foot-grid { display: flex; flex-wrap: wrap; gap: 1.5rem 2.5rem; align-items: flex-start; justify-content: space-between; }
+  .foot-brand { font-family: var(--serif); font-size: 1rem; color: var(--ink); }
+  .foot-links { display: flex; flex-wrap: wrap; gap: .5rem 1.4rem; font-size: .9rem; }
+  .foot-links a { color: var(--ink-soft); text-decoration: none; }
+  .foot-links a:hover { color: var(--accent-dk); text-decoration: underline; }
+  .smallprint {
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line-2);
+    font-family: var(--mono);
+    font-size: .68rem;
+    line-height: 1.7;
+    letter-spacing: .01em;
+    color: var(--ink-faint);
+    max-width: 90ch;
+  }
+  .smallprint b { font-weight: 600; color: var(--ink-soft); }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; scroll-behavior: auto !important; }
+    .card-arrow, .card:hover .card-arrow { transform: none; }
+  }
+
+  html { scroll-behavior: smooth; }
+</style>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Evolutionary Software Foundation — home">
+      <!-- Mark: a minimal two-branch cladogram — one branch to a leaf node (biology),
+           one to a terminal cursor block (computer science), meeting at a common node. -->
+      <svg class="mark" width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+        <circle cx="6" cy="17" r="2.4" fill="#2E6E5F"/>
+        <path d="M6 17 H15 M15 17 V8 H24 M15 17 V26 H23" stroke="#191D1B" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="25.5" cy="8" r="2.4" fill="none" stroke="#191D1B" stroke-width="1.6"/>
+        <rect x="24" y="24" width="5" height="4" rx="0.6" fill="#2E6E5F"/>
+      </svg>
+      <span class="name"><b>Evolutionary Software Foundation</b><span class="sub">Nonprofit · est. 2008</span></span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#mission">Mission</a>
+      <a href="#projects">Projects</a>
+      <a href="#about">About</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <span id="top"></span>
+
+  <!-- ----------  Hero / signature  ---------- -->
+  <section class="hero" id="mission" aria-labelledby="mission-h">
+    <div class="wrap">
+      <p class="eyebrow">Our mission</p>
+      <h1 class="mission" id="mission-h">
+        <span class="lede">We promote the understanding and application of evolutionary ideas in</span>
+        <span class="field-bio">molecular&nbsp;biology</span> <span class="amp">&amp;</span> <span class="field-cs">computer&nbsp;science</span>.
+      </h1>
+      <p class="hero-note">
+        The Evolutionary Software Foundation is a nonprofit that stewards a family of free
+        and open-source scientific software — including <a href="https://jbrowse.org">JBrowse</a> —
+        built and maintained by researchers for the wider community.
+      </p>
+    </div>
+  </section>
+
+  <!-- ----------  Projects  ---------- -->
+  <section id="projects" aria-labelledby="projects-h">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Software we steward</p>
+        <h2 id="projects-h">Projects</h2>
+        <p>Free and open source, developed in the open across two GitHub organizations. Each links out to its home.</p>
+      </div>
+
+      <div class="org-block">
+        <div class="org-bar">
+          <h3>@evoldoers</h3>
+          <span class="org-note">Tools for evolutionary sequence analysis, phylogenetics, and modeling.</span>
+          <a class="org-link" href="https://github.com/evoldoers">github.com/evoldoers&nbsp;↗</a>
+        </div>
+        <div class="cards">
+          <a class="card" href="https://machineboss.org">
+            <span class="card-top">
+              <span class="card-name">Machine Boss</span>
+              <svg class="card-arrow" width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M4 11 L11 4 M6 4 H11 V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="card-desc">A toolkit for building and combining weighted finite-state machines over biological sequences.</span>
+            <span class="card-host">machineboss.org</span>
+          </a>
+          <a class="card" href="https://biomake.org">
+            <span class="card-top">
+              <span class="card-name">BioMake</span>
+              <svg class="card-arrow" width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M4 11 L11 4 M6 4 H11 V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="card-desc">A GNU Make–like build tool for reproducible bioinformatics workflows, with cluster and cloud backends.</span>
+            <span class="card-host">biomake.org</span>
+          </a>
+          <a class="card" href="https://github.com/evoldoers/historian">
+            <span class="card-top">
+              <span class="card-name">Historian</span>
+              <svg class="card-arrow" width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M4 11 L11 4 M6 4 H11 V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="card-desc">Reconstruction of phylogenetic insertion–deletion histories and accurate multiple alignment.</span>
+            <span class="card-host">github.com/evoldoers/historian</span>
+          </a>
+          <a class="card" href="https://github.com/evoldoers/carnaval">
+            <span class="card-top">
+              <span class="card-name">Carnaval</span>
+              <svg class="card-arrow" width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M4 11 L11 4 M6 4 H11 V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="card-desc">Cellular automata for RNA and artificial life — evolutionary dynamics as computation.</span>
+            <span class="card-host">github.com/evoldoers/carnaval</span>
+          </a>
+          <a class="card" href="https://github.com/evoldoers/tkf-mixdom">
+            <span class="card-top">
+              <span class="card-name">tkf-mixdom</span>
+              <svg class="card-arrow" width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M4 11 L11 4 M6 4 H11 V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="card-desc">Inference and training for TKF91/92 indel and mixture-domain sequence-evolution models.</span>
+            <span class="card-host">github.com/evoldoers/tkf-mixdom</span>
+          </a>
+          <a class="card" href="https://tkfdp.net">
+            <span class="card-top">
+              <span class="card-name">tkfdp</span>
+              <svg class="card-arrow" width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M4 11 L11 4 M6 4 H11 V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="card-desc">Indel-aware Potts models for protein coevolution, with code and supplementary materials.</span>
+            <span class="card-host">tkfdp.net</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="org-block">
+        <div class="org-bar">
+          <h3>@GMOD</h3>
+          <span class="org-note">The Generic Model Organism Database project — genome-scale tools for biology.</span>
+          <a class="org-link" href="https://github.com/GMOD">github.com/GMOD&nbsp;↗</a>
+        </div>
+        <div class="cards">
+          <a class="card" href="https://jbrowse.org">
+            <span class="card-top">
+              <span class="card-name">JBrowse</span>
+              <svg class="card-arrow" width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M4 11 L11 4 M6 4 H11 V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="card-desc">A fast, embeddable genome browser for the web — the flagship viewer used by biologists worldwide.</span>
+            <span class="card-host">jbrowse.org</span>
+          </a>
+          <a class="card" href="https://github.com/GMOD/Apollo">
+            <span class="card-top">
+              <span class="card-name">Apollo</span>
+              <svg class="card-arrow" width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><path d="M4 11 L11 4 M6 4 H11 V9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+            <span class="card-desc">Collaborative, real-time genome annotation editing on top of the JBrowse platform.</span>
+            <span class="card-host">github.com/GMOD/Apollo</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ----------  About  ---------- -->
+  <section class="about" id="about" aria-labelledby="about-h">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">About the Foundation</p>
+        <p class="about-lead">
+          Evolution is a shared idea. It explains how molecules acquire function over deep time,
+          and it gives computing a way to search, adapt, and learn.
+        </p>
+      </div>
+      <div class="about-body">
+        <h2 id="about-h" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">About</h2>
+        <p>
+          The Evolutionary Software Foundation is a nonprofit organization. We support the people
+          who build and maintain open scientific software, keeping essential research tools free,
+          well-documented, and available for the long term.
+        </p>
+        <p>
+          Our projects span sequence analysis, phylogenetics, genome visualization, and the study
+          of evolution as a computational process — work that lives at the meeting point of
+          biology and computer science.
+        </p>
+        <ul class="facts">
+          <li><span class="k">Type</span><span class="v">501(c)(3) nonprofit &amp; charitable trust</span></li>
+          <li><span class="k">Founded</span><span class="v">February 2008</span></li>
+          <li><span class="k">Focus</span><span class="v">Free &amp; open-source scientific software</span></li>
+          <li><span class="k">Code</span><span class="v"><a href="https://github.com/evoldoers">@evoldoers</a> · <a href="https://github.com/GMOD">@GMOD</a></span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">Evolutionary Software Foundation</div>
+      <nav class="foot-links" aria-label="Footer">
+        <a href="#mission">Mission</a>
+        <a href="#projects">Projects</a>
+        <a href="#about">About</a>
+        <a href="https://github.com/evoldoers">GitHub · @evoldoers</a>
+        <a href="https://github.com/GMOD">GitHub · @GMOD</a>
+      </nav>
+    </div>
+    <p class="smallprint">
+      Corporation entity number <b>C3091176</b> (filed 2/19/2008)
+      · Charitable trust registration number <b>CT0157315</b>
+      · Federal employer identification number (FEIN) <b>26-3188107</b>
+    </p>
+  </div>
+</footer>
